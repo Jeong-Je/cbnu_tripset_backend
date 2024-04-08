@@ -9,7 +9,9 @@ import com.trip.Let.sGo.post.repository.PostRepository;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,5 +40,13 @@ public class PostService {
         PostDTO postDTO = new PostDTO(post);
 
         return postDTO;
+    }
+
+    public void likePost(Integer postId, String username) {
+        PostEntity post = this.postRepository.getReferenceById(postId);
+        UserEntity user = this.userRepository.findByUsername(username);
+
+        post.getVoter().add(user);
+        this.postRepository.save(post);
     }
 }
