@@ -9,6 +9,9 @@ import com.trip.Let.sGo.user.repository.UserRepository;
 import com.trip.Let.sGo.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +39,13 @@ public class CommentService {
         newComment.setCreateDate(comment.getCreateDate());
 
         return newComment;
+    }
+
+    public void likeComment(Integer commentId, String username) {
+        CommentEntity comment = this.commentRepository.getReferenceById(commentId);
+        UserEntity user = this.userRepository.findByUsername(username);
+
+        comment.getVoter().add(user);
+        this.commentRepository.save(comment);
     }
 }
