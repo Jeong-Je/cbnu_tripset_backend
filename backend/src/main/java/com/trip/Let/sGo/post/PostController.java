@@ -34,6 +34,26 @@ public class PostController {
         return this.postService.createPost(createPostDTO, principal.getName());
     }
 
+    //글수정
+    @PreAuthorize("isAuthenticated()")  // jwt 토큰검사
+    @PutMapping("update/{id}")
+    public PostDTO updatePost(@PathVariable("id") Integer postId, @Valid CreatePostDTO createPostDTO, BindingResult bindingResult, Principal principal) {
+        System.out.println("update");   //test
+
+        if(bindingResult.hasErrors()) {
+            // 유효성 검사 오류 처리
+        }
+        return this.postService.updatePost(postId, createPostDTO, principal.getName());
+    }
+
+    //글삭제
+    @PreAuthorize("isAuthenticated()")  // jwt 토큰검사
+    @DeleteMapping("delete/{id}")
+    public void deletePost(@PathVariable("id") Integer postId, Principal principal) {
+
+        this.postService.deletePost(postId, principal.getName());
+    }
+
     // 특정 게시글 불러오기
     @GetMapping("/{id}")
     public PostDTO selectPost(@PathVariable("id") Integer postId) {
