@@ -1,5 +1,6 @@
 package com.trip.Let.sGo.user;
 
+import com.trip.Let.sGo.exception.UsernameAlreadyExistsException;
 import com.trip.Let.sGo.user.dto.CreateUserDTO;
 import com.trip.Let.sGo.user.dto.UserDTO;
 import com.trip.Let.sGo.user.repository.UserRepository;
@@ -15,16 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserDTO createUser(UserDTO userDTO) {
-        String username = userDTO.getUsername();
-        String password = userDTO.getPassword();
-
-        Boolean isExist = userRepository.existsByUsername(username);
-
-        if(isExist) {
-//            return;
-        }
-
+    public UserDTO createUser(String username, String password) {
         UserEntity user = new UserEntity();
 
         user.setUsername(username);
