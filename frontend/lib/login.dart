@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:front/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -14,6 +14,8 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
+  bool switchValue = false;
+
   @override
   Widget build(BuildContext context) {
     User user = User("", "", "");
@@ -168,14 +170,45 @@ class LoginState extends State<Login> {
                           ),
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Auto-login ',
+                                style: TextStyle(
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              CupertinoSwitch(
+                                // 부울 값으로 스위치 토글 (value)
+                                value: switchValue,
+                                activeColor: Colors.blue.shade100,
+                                onChanged: (bool? value) {
+                                  // 스위치가 토글될 때 실행될 코드
+                                  setState(() {
+                                    switchValue = value ?? false;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
                         ),
                         InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Register()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Register()),
+                            );
                           },
                           child: Text(
                             "Don't have Account?",

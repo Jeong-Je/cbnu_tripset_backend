@@ -4,7 +4,7 @@
             "outputFile": "com.example.front.app-mergeDebugResources-9:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

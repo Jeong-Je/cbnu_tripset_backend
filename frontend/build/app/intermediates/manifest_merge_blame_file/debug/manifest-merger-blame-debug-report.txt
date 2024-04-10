@@ -13,11 +13,11 @@
 13         to allow setting breakpoints, to provide hot reload, etc.
 14    -->
 15    <uses-permission android:name="android.permission.INTERNET" />
-15-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/debug/AndroidManifest.xml:6:5-66
-15-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/debug/AndroidManifest.xml:6:22-64
+15-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/debug/AndroidManifest.xml:6:5-66
+15-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/debug/AndroidManifest.xml:6:22-64
 16    <uses-permission android:name="andriod.permission.INTERNET" />
-16-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:2:5-66
-16-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:2:22-64
+16-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:2:5-66
+16-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:2:22-64
 17    <!--
 18 Required to query activities that can process text, see:
 19         https://developer.android.com/training/package-visibility?hl=en and
@@ -26,16 +26,16 @@
 22         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
 23    -->
 24    <queries>
-24-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:39:5-44:15
+24-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:39:5-44:15
 25        <intent>
-25-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:40:9-43:18
+25-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:40:9-43:18
 26            <action android:name="android.intent.action.PROCESS_TEXT" />
-26-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:41:13-72
-26-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:41:21-70
+26-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:41:13-72
+26-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:41:21-70
 27
 28            <data android:mimeType="text/plain" />
-28-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:42:13-50
-28-->/Users/hyeok/Desktop/kimjinhyeok/front/android/app/src/main/AndroidManifest.xml:42:19-48
+28-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:42:13-50
+28-->/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/android/app/src/main/AndroidManifest.xml:42:19-48
 29        </intent>
 30    </queries>
 31
