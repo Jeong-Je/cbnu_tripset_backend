@@ -38,8 +38,6 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")  // jwt 토큰검사
     @PutMapping("update/{id}")
     public PostDTO updatePost(@PathVariable("id") Integer postId, @Valid CreatePostDTO createPostDTO, BindingResult bindingResult, Principal principal) {
-        System.out.println("update");   //test
-
         if(bindingResult.hasErrors()) {
             // 유효성 검사 오류 처리
         }
