@@ -9,8 +9,13 @@ import com.trip.Let.sGo.user.entity.UserEntity;
 import com.trip.Let.sGo.post.repository.PostRepository;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -75,6 +80,21 @@ public class PostService {
 
         return postDTO;
 
+    }
+
+    public List<PostDTO> paginatePost(Integer page, Integer size, String direction) {
+        Pageable pageable;
+        if(direction.equals("ASC")) {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"));
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+        }
+        Page<PostDTO> list = this.postRepository.findAll(pageable).map((post) -> new PostDTO(post));
+
+        // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
+        System.out.println(pageable.next());
+
+        return list.getContent();
     }
 
     //게시글 조회 오류

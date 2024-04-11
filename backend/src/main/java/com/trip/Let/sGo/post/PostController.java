@@ -2,20 +2,13 @@ package com.trip.Let.sGo.post;
 
 
 import com.trip.Let.sGo.exception.BadRequestException;
-import com.trip.Let.sGo.exception.ValidException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
-import com.trip.Let.sGo.post.entity.PostEntity;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -66,6 +59,14 @@ public class PostController {
     public void deletePost(@PathVariable("id") Integer postId, Principal principal) {
 
         this.postService.deletePost(postId, principal.getName());
+    }
+
+    // 게시글 페이지네이션
+    @GetMapping()
+    public List<PostDTO> paginatePost(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(value = "direction", defaultValue = "DESC") String direction) {
+        return this.postService.paginatePost(page, size, direction);
     }
 
     // 특정 게시글 불러오기
