@@ -1,6 +1,7 @@
 package com.trip.Let.sGo.post;
 
 
+import com.trip.Let.sGo.exception.BadRequestException;
 import com.trip.Let.sGo.exception.ValidException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
@@ -38,7 +39,7 @@ public class PostController {
                 errorMessages.add(error.getDefaultMessage());
             }
 
-            throw new ValidException(errorMessages.toString());
+            throw new BadRequestException(errorMessages.toString());
         }
         return this.postService.createPost(createPostDTO, principal.getName());
     }
@@ -54,7 +55,7 @@ public class PostController {
                 errorMessages.add(error.getDefaultMessage());
             }
 
-            throw new ValidException(errorMessages.toString());
+            throw new BadRequestException(errorMessages.toString());
         }
         return this.postService.updatePost(postId, createPostDTO, principal.getName());
     }

@@ -1,8 +1,7 @@
 package com.trip.Let.sGo.post;
 
-import com.trip.Let.sGo.comment.dto.CommentDTO;
 import com.trip.Let.sGo.exception.DataNotFoundException;
-import com.trip.Let.sGo.exception.UnauthorizedAccessException;
+import com.trip.Let.sGo.exception.ForbiddenAccessException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
@@ -10,14 +9,10 @@ import com.trip.Let.sGo.user.entity.UserEntity;
 import com.trip.Let.sGo.post.repository.PostRepository;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Service
@@ -49,7 +44,7 @@ public class PostService {
 
         // 현재 사용자의 username과 게시물의 작성자(getUsername)가 일치하는지 확인
         if (!user.equals(username)) { // 유저 권한 확인
-            throw new UnauthorizedAccessException("작성자 "+user+" 외에는 수정할 수 없습니다.");
+            throw new ForbiddenAccessException("작성자 "+user+" 외에는 수정할 수 없습니다.");
         }
 
         existingPost.setTitle(createPostDTO.getTitle());
@@ -67,9 +62,8 @@ public class PostService {
         UserEntity author = existingPost.getAuthor();
         String user = author.getUsername();
 
-        // 현재 사용자의 username과 게시물의 작성자(getUsername)가 일치하는지 확인
-        if (!user.equals(username)) { // 유저 권한 확인
-            throw new UnauthorizedAccessException("작성자 "+user+" 외에는 삭제할 수 없습니다.");
+        if (!user.equals((username))) {
+            throw new ForbiddenAccessException("작성자 "+user+" 외에는 삭제할 수 없습니다.");
         }
 
         this.postRepository.delete(existingPost);
