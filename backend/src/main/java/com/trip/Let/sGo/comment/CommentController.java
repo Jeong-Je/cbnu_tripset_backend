@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -21,9 +18,28 @@ public class CommentController {
 
     // 새로운 댓글 생성
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/create/{id}")
+    @PostMapping("create/{id}")
     private CommentDTO createComment(@Valid()CommentDTO commentDTO, BindingResult bindingResult, Principal principal, @PathVariable("id") Integer postId) {
         return commentService.createComment(commentDTO, principal.getName(), postId);
+    }
+
+    // 댓글 수정 (comment modify)
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping ("modify/{id}")
+    private CommentDTO modifyComment(@Valid CommentDTO commentDTO, BindingResult bindingResult, Principal principal, @PathVariable("id") Integer Id){
+        System.out.println("test");
+        if(bindingResult.hasErrors()) {
+            // 유효성 검사 오류 처리
+        }
+        return commentService.modifyComment(commentDTO, principal.getName(), Id);
+    }
+
+    // 댓글 삭제
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("delete/{id}")
+    public void deleteComment(@PathVariable("id") Integer commentId, Principal principal) {
+
+        this.commentService.deleteComment(commentId, principal.getName());
     }
 
     // 댓글에 좋아요
@@ -32,4 +48,5 @@ public class CommentController {
     private void likeComment(@PathVariable("id") Integer id, Principal principal) {
         this.commentService.likeComment(id, principal.getName());
     }
+
 }
