@@ -69,7 +69,7 @@ public class PostController {
 
     // 특정 게시글 불러오기
     @GetMapping("/{id}")
-    public PostDTO selectPost(@PathVariable("id") Integer postId) {
+    public PostDTO getPost(@PathVariable("id") Integer postId) {
         return this.postService.getPost(postId);
     }
 
