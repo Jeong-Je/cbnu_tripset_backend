@@ -49,7 +49,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/user").permitAll()
+                        .requestMatchers("/login", "/", "/user","/chat").permitAll()
                         .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
