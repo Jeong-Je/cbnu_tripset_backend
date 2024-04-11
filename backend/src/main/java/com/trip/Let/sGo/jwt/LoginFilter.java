@@ -13,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -48,7 +50,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(username, role, 60*60*1000000L);
-        response.addHeader("Authorization", "Bearer " + token);
+
+        // JSON 형식으로 응답 생성
+        String jsonResponse = "{\"accessToken\": \"Bearer " + token + "\"}";
+
+        // 응답의 Content-Type을 application/json으로 설정
+        response.setContentType("application/json");
+
+        try {
+            // PrintWriter를 사용하여 JSON 응답을 작성
+            PrintWriter out = response.getWriter();
+            out.print(jsonResponse);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 로그인 실패시 실행되는 메소드
