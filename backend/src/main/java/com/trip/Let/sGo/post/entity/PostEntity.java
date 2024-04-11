@@ -33,6 +33,9 @@ public class PostEntity {
     @ManyToOne
     private UserEntity author;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @ManyToMany
     Set<UserEntity> voter; // voter 속성값이 서로 중복되지 않도록 List보다는 Set이 효율적
 

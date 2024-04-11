@@ -15,5 +15,7 @@ public class CommentDTO {
 
     private UserEntity author;
 
+    private Integer likeCount;
+
     private LocalDateTime createDate;
 }

@@ -45,7 +45,12 @@ public class CommentService {
         CommentEntity comment = this.commentRepository.getReferenceById(commentId);
         UserEntity user = this.userRepository.findByUsername(username);
 
+        // 좋아요 명단에 넣기
         comment.getVoter().add(user);
+
+        // 좋아요 개수 1 증가
+        comment.setLikeCount(comment.getLikeCount() + 1);
+
         this.commentRepository.save(comment);
     }
 }

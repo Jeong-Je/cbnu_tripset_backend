@@ -26,6 +26,9 @@ public class CommentEntity {
     @ManyToOne
     private UserEntity author;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @ManyToOne
     private PostEntity postEntity;
 

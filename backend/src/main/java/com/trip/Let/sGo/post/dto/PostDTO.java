@@ -21,6 +21,8 @@ public class PostDTO {
 
     private String content;
 
+    private Integer likeCount;
+
     private UserEntity author;
 
     private LocalDateTime createDate;
@@ -33,6 +35,7 @@ public class PostDTO {
         this.content = post.getContent();
         this.createDate = post.getCreateDate();
         this.author = post.getAuthor();
+        this.likeCount = post.getLikeCount();
         if(post.getCommentEntityList() != null){
             this.commentDTOList = convertToCommentDTOList(post.getCommentEntityList());
         }
@@ -47,6 +50,7 @@ public class PostDTO {
             commentDTO.setComment(commentEntity.getComment());
             commentDTO.setCreateDate(commentEntity.getCreateDate());
             commentDTO.setAuthor(commentEntity.getAuthor());
+            commentDTO.setLikeCount(commentEntity.getLikeCount());
 
             commentDTOList.add(commentDTO);
         }
