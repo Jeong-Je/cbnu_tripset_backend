@@ -1,6 +1,7 @@
 package com.trip.Let.sGo.post;
 
 
+import com.trip.Let.sGo.exception.ValidException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
@@ -12,10 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,7 +32,13 @@ public class PostController {
     @PostMapping("/create")
     public PostDTO createPost(@Valid CreatePostDTO createPostDTO, BindingResult bindingResult, Principal principal) {
         if(bindingResult.hasErrors()) {
+            // 유효성 검사 오류 처리
+            List<String> errorMessages = new ArrayList<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMessages.add(error.getDefaultMessage());
+            }
 
+            throw new ValidException(errorMessages.toString());
         }
         return this.postService.createPost(createPostDTO, principal.getName());
     }
@@ -40,6 +49,12 @@ public class PostController {
     public PostDTO updatePost(@PathVariable("id") Integer postId, @Valid CreatePostDTO createPostDTO, BindingResult bindingResult, Principal principal) {
         if(bindingResult.hasErrors()) {
             // 유효성 검사 오류 처리
+            List<String> errorMessages = new ArrayList<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMessages.add(error.getDefaultMessage());
+            }
+
+            throw new ValidException(errorMessages.toString());
         }
         return this.postService.updatePost(postId, createPostDTO, principal.getName());
     }
