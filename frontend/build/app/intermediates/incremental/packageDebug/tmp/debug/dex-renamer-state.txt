@@ -1,4 +1,0 @@
-#Thu Apr 11 23:43:51 KST 2024
-base.0=/Users/hyeok/Desktop/kimjinhyeok/project/lets-go/frontend/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
