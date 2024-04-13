@@ -8,6 +8,8 @@ import com.trip.Let.sGo.user.entity.UserEntity;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import com.trip.Let.sGo.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,16 +68,27 @@ public class CommentService {
         this.commentRepository.delete(comment);
     }
 
-    public void likeComment(Integer commentId, String username) {
+    public ResponseEntity<String> likeComment(Integer commentId, String username) {
         CommentEntity comment = this.commentRepository.getReferenceById(commentId);
         UserEntity user = this.userRepository.findByUsername(username);
 
-        // 좋아요 명단에 넣기
-        comment.getVoter().add(user);
+        // 이미 좋아요를 눌렀는지 확인
+        if (!comment.getVoter().contains(user)) {
+            // 좋아요 명단에 넣기
+            comment.getVoter().add(user);
 
-        // 좋아요 개수 1 증가
-        comment.setLikeCount(comment.getLikeCount() + 1);
+            // 좋아요 개수 1 증가
+            comment.setLikeCount(comment.getLikeCount() + 1);
 
-        this.commentRepository.save(comment);
+            this.commentRepository.save(comment);
+
+            // 성공적인 응답 반환
+            String responseJson = "{\"message\": \"좋아요가 성공적으로 추가되었습니다.\"}";
+            return ResponseEntity.ok(responseJson);
+        } else {
+            // 이미 좋아요를 누른 경우에는 실패 응답 반환
+            String responseJson = "{\"message\": \"이미 좋아요를 눌렀습니다.\"}";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseJson);
+        }
     }
 }
