@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -108,16 +110,27 @@ public class PostService {
     }
 
     //좋아요기능
-    public void likePost(Integer postId, String username) {
+    public ResponseEntity<String> likePost(Integer postId, String username) {
         PostEntity post = findPostOrThrowById(postId);
         UserEntity user = this.userRepository.findByUsername(username);
 
-        // 좋아요 명단에 넣기
-        post.getVoter().add(user);
+        // 이미 좋아요를 눌렀는지 확인
+        if (!post.getVoter().contains(user)) {
+            // 좋아요 명단에 넣기
+            post.getVoter().add(user);
 
-        // 좋아요 개수 1 증가
-        post.setLikeCount(post.getLikeCount() + 1);
+            // 좋아요 개수 1 증가
+            post.setLikeCount(post.getLikeCount() + 1);
 
-        this.postRepository.save(post);
+            this.postRepository.save(post);
+
+            // 성공적인 응답 반환
+            String responseJson = "{\"message\": \"좋아요가 성공적으로 추가되었습니다.\"}";
+            return ResponseEntity.ok(responseJson);
+        } else {
+            // 이미 좋아요를 누른 경우에는 Conflict 상태 코드 반환
+            String responseJson = "{\"message\": \"이미 좋아요를 눌렀습니다.\"}";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseJson);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -78,7 +79,7 @@ public class PostController {
     // 게시글에 좋아요 기능
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like/{id}")
-    public void likePost(@PathVariable("id") Integer postId, Principal principal) {
-        this.postService.likePost(postId, principal.getName());
+    public ResponseEntity likePost(@PathVariable("id") Integer postId, Principal principal) {
+        return this.postService.likePost(postId, principal.getName());
     }
 }

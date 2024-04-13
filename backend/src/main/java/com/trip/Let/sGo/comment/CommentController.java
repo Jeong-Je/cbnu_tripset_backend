@@ -4,6 +4,7 @@ import com.trip.Let.sGo.comment.dto.CommentDTO;
 import com.trip.Let.sGo.comment.entity.CommentEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +46,8 @@ public class CommentController {
     // 댓글에 좋아요
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like/{id}")
-    private void likeComment(@PathVariable("id") Integer id, Principal principal) {
-        this.commentService.likeComment(id, principal.getName());
+    private ResponseEntity likeComment(@PathVariable("id") Integer id, Principal principal) {
+        return this.commentService.likeComment(id, principal.getName());
     }
 
 }
