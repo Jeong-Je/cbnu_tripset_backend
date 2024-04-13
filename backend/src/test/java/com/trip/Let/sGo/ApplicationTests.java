@@ -18,7 +18,7 @@ class ApplicationTests {
 
 	@Test
 	void contextLoads() {
-		UserEntity user = this.userRepository.findByUsername("bot");
+		UserEntity user = this.userRepository.findByUsername("auto");
 
 		for(int i=1;i<=300;i++){
 			PostEntity post = new PostEntity();
