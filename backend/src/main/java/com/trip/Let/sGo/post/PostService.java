@@ -84,19 +84,30 @@ public class PostService {
 
     }
 
-    public List<PostDTO> paginatePost(Integer page, Integer size, String direction) {
-        Pageable pageable;
-        if(direction.equals("ASC")) {
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"));
-        } else {
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
-        }
-        Page<PostDTO> list = this.postRepository.findAll(pageable).map((post) -> new PostDTO(post));
+    public List<PostDTO> paginatePost(Integer page, Integer size, String direction, String username) {
+        Pageable pageable = direction.equals("ASC")
+                ? PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"))
+                : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
 
+        //username 게시글 찾기
+        Page<PostEntity> postPage;
+        if (username.equals("all")) {
+            postPage = this.postRepository.findAll(pageable);
+        } else {
+            UserEntity user = this.userRepository.findByUsername(username);
+            if (user == null) {
+                throw new DataNotFoundException("User not found with username: " + username);
+            }
+            postPage = this.postRepository.findByAuthor(user, pageable);
+        }
+
+        //게시글이 없을때
+        if(postPage == null){
+            throw new DataNotFoundException("게시글을 조회하지 못했습니다");
+        }
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
         System.out.println(pageable.next());
-
-        return list.getContent();
+        return postPage.map(PostDTO::new).getContent();
     }
 
     //게시글 조회 오류
