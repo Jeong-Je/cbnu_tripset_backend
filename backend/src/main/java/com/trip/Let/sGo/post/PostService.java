@@ -5,10 +5,12 @@ import com.trip.Let.sGo.exception.ForbiddenAccessException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
+import com.trip.Let.sGo.post.pagination.PaginationResult;
 import com.trip.Let.sGo.user.entity.UserEntity;
 import com.trip.Let.sGo.post.repository.PostRepository;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,9 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    @Value("${aws_server_ip}")
+    private String base_url;
 
     public PostDTO createPost(CreatePostDTO createPostDTO, String username) {
         UserEntity user = this.userRepository.findByUsername(username);
@@ -84,7 +89,7 @@ public class PostService {
 
     }
 
-    public List<PostDTO> paginatePost(Integer page, Integer size, String direction, String username) {
+    public PaginationResult paginatePost(Integer page, Integer size, String direction, String username) {
         Pageable pageable = direction.equals("ASC")
                 ? PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
@@ -105,9 +110,11 @@ public class PostService {
         if(postPage == null){
             throw new DataNotFoundException("게시글을 조회하지 못했습니다");
         }
+
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
-        System.out.println(pageable.next());
-        return postPage.map(PostDTO::new).getContent();
+        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction);
+
+        return new PaginationResult(postPage.map(PostDTO::new).getContent(), nextPageLink);
     }
 
     //게시글 조회 오류
