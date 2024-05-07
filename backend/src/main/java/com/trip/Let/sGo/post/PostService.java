@@ -39,6 +39,7 @@ public class PostService {
         post.setAuthor(user);
         post.setTitle(createPostDTO.getTitle());
         post.setContent(createPostDTO.getContent());
+        post.setCategory(createPostDTO.getCategory());
         postRepository.save(post);
 
         PostDTO newPost = new PostDTO(post);
@@ -89,21 +90,30 @@ public class PostService {
 
     }
 
-    public PaginationResult paginatePost(Integer page, Integer size, String direction, String username) {
+    public PaginationResult paginatePost(Integer page, Integer size, String direction, String username, String category) {
         Pageable pageable = direction.equals("ASC")
                 ? PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
 
         //username 게시글 찾기
+//        Page<PostEntity> postPage;
+//        if (username.equals("all")) {
+//            postPage = this.postRepository.findAll(pageable);
+//        } else {
+//            UserEntity user = this.userRepository.findByUsername(username);
+//            if (user == null) {
+//                throw new DataNotFoundException("User not found with username: " + username);
+//            }
+//            postPage = this.postRepository.findByAuthor(user, pageable);
+//        }
+
         Page<PostEntity> postPage;
-        if (username.equals("all")) {
-            postPage = this.postRepository.findAll(pageable);
+        if(category.equals("FREE")) {
+            postPage = this.postRepository.findByCategory("FREE", pageable);
+        } else if (category.equals("PLAN")) {
+            postPage = this.postRepository.findByCategory("PLAN", pageable);
         } else {
-            UserEntity user = this.userRepository.findByUsername(username);
-            if (user == null) {
-                throw new DataNotFoundException("User not found with username: " + username);
-            }
-            postPage = this.postRepository.findByAuthor(user, pageable);
+            postPage = this.postRepository.findAll(pageable);
         }
 
         //게시글이 없을때
@@ -112,7 +122,7 @@ public class PostService {
         }
 
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
-        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction);
+        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s&category=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category);
 
         return new PaginationResult(postPage.map(PostDTO::new).getContent(), nextPageLink);
     }

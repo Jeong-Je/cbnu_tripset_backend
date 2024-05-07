@@ -27,6 +27,9 @@ public class PostEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column
+    private String category;
+
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE)
     private List<CommentEntity> commentEntityList;
 

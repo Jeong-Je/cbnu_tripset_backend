@@ -18,16 +18,17 @@ class ApplicationTests {
 
 	@Test
 	void contextLoads() {
-		UserEntity user = this.userRepository.findByUsername("admin");
-
-		for(int i=1;i<=300;i++){
-			PostEntity post = new PostEntity();
-			post.setAuthor(user);
-			post.setContent(String.format("[%03d] > 대용량 게시글 테스트", i));
-			post.setTitle(String.format("[%03d] > 대용량 게시글 테스트", i));
-
-			postRepository.save(post);
-		}
+//		UserEntity user = this.userRepository.findByUsername("admin");
+//
+//		for(int i=1;i<=100;i++){
+//			PostEntity post = new PostEntity();
+//			post.setAuthor(user);
+//			post.setContent(String.format("[%03d] > 계획 게시판 임시 게시글 내용", i));
+//			post.setTitle(String.format("[%03d] > 계획 게시판 임시 게시글 제목", i));
+//			post.setCategory("PLAN");
+//
+//			postRepository.save(post);
+//		}
 	}
 
 }

@@ -21,6 +21,8 @@ public class PostDTO {
 
     private String content;
 
+    private String category;
+
     private Integer likeCount;
 
     private UserEntity author;
@@ -33,6 +35,7 @@ public class PostDTO {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
+        this.category = post.getCategory();
         this.createDate = post.getCreateDate();
         this.author = post.getAuthor();
         this.likeCount = post.getLikeCount();
