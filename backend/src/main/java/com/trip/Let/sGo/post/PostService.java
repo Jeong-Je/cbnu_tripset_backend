@@ -5,10 +5,12 @@ import com.trip.Let.sGo.exception.ForbiddenAccessException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
+import com.trip.Let.sGo.post.pagination.PaginationResult;
 import com.trip.Let.sGo.user.entity.UserEntity;
 import com.trip.Let.sGo.post.repository.PostRepository;
 import com.trip.Let.sGo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Value("${aws_server_ip}")
+    private String base_url;
+
     public PostDTO createPost(CreatePostDTO createPostDTO, String username) {
         UserEntity user = this.userRepository.findByUsername(username);
         PostEntity post = new PostEntity();
@@ -34,6 +39,7 @@ public class PostService {
         post.setAuthor(user);
         post.setTitle(createPostDTO.getTitle());
         post.setContent(createPostDTO.getContent());
+        post.setCategory(createPostDTO.getCategory());
         postRepository.save(post);
 
         PostDTO newPost = new PostDTO(post);
@@ -84,30 +90,41 @@ public class PostService {
 
     }
 
-    public List<PostDTO> paginatePost(Integer page, Integer size, String direction, String username) {
+    public PaginationResult paginatePost(Integer page, Integer size, String direction, String username, String category) {
         Pageable pageable = direction.equals("ASC")
                 ? PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
 
         //username 게시글 찾기
+//        Page<PostEntity> postPage;
+//        if (username.equals("all")) {
+//            postPage = this.postRepository.findAll(pageable);
+//        } else {
+//            UserEntity user = this.userRepository.findByUsername(username);
+//            if (user == null) {
+//                throw new DataNotFoundException("User not found with username: " + username);
+//            }
+//            postPage = this.postRepository.findByAuthor(user, pageable);
+//        }
+
         Page<PostEntity> postPage;
-        if (username.equals("all")) {
-            postPage = this.postRepository.findAll(pageable);
+        if(category.equals("FREE")) {
+            postPage = this.postRepository.findByCategory("FREE", pageable);
+        } else if (category.equals("PLAN")) {
+            postPage = this.postRepository.findByCategory("PLAN", pageable);
         } else {
-            UserEntity user = this.userRepository.findByUsername(username);
-            if (user == null) {
-                throw new DataNotFoundException("User not found with username: " + username);
-            }
-            postPage = this.postRepository.findByAuthor(user, pageable);
+            postPage = this.postRepository.findAll(pageable);
         }
 
         //게시글이 없을때
         if(postPage == null){
             throw new DataNotFoundException("게시글을 조회하지 못했습니다");
         }
+
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
-        System.out.println(pageable.next());
-        return postPage.map(PostDTO::new).getContent();
+        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s&category=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category);
+
+        return new PaginationResult(postPage.map(PostDTO::new).getContent(), nextPageLink);
     }
 
     //게시글 조회 오류

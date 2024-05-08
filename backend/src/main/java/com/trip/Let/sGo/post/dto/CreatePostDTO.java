@@ -1,17 +1,10 @@
 package com.trip.Let.sGo.post.dto;
 
-import com.trip.Let.sGo.comment.dto.CommentDTO;
-import com.trip.Let.sGo.comment.entity.CommentEntity;
-import com.trip.Let.sGo.post.entity.PostEntity;
-import com.trip.Let.sGo.user.entity.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter
@@ -22,4 +15,8 @@ public class CreatePostDTO {
 
     @NotEmpty(message = "내용은 필수 항목입니다.")
     private String content;
+
+    @NotEmpty(message = "카테고리는 필수 항목입니다.")
+    @Pattern(regexp = "FREE|PLAN", message = "카테고리는 'FREE' 또는 'PLAN'이어야 합니다.")
+    private String category;
 }
