@@ -3,6 +3,7 @@ package com.trip.Let.sGo.post;
 import com.trip.Let.sGo.exception.DataNotFoundException;
 import com.trip.Let.sGo.exception.ForbiddenAccessException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
+import com.trip.Let.sGo.post.dto.PaginationPostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
 import com.trip.Let.sGo.post.pagination.PaginationResult;
@@ -19,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -124,7 +124,7 @@ public class PostService {
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
         String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s&category=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category);
 
-        return new PaginationResult(postPage.map(PostDTO::new).getContent(), nextPageLink);
+        return new PaginationResult(postPage.map(PaginationPostDTO::new).getContent(), nextPageLink);
     }
 
     //게시글 조회 오류
