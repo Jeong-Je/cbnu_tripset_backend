@@ -64,13 +64,15 @@ public class PostController {
     }
 
     // 게시글 페이지네이션
+    @PreAuthorize("isAuthenticated()")
     @GetMapping()
     public PaginationResult paginatePost(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                          @RequestParam(value = "size", defaultValue = "10") Integer size,
                                          @RequestParam(value = "direction", defaultValue = "DESC") String direction,
                                          @RequestParam(value = "username", defaultValue = "all") String username,
-                                         @RequestParam(value = "category", defaultValue = "all") String category) {
-        return this.postService.paginatePost(page, size, direction, username, category);
+                                         @RequestParam(value = "category", defaultValue = "all") String category,
+                                         @RequestParam(value = "like", defaultValue = "false") Boolean like) {
+        return this.postService.paginatePost(page, size, direction, username, category, like);
     }
 
     // 특정 게시글 불러오기
