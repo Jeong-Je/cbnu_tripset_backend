@@ -4,6 +4,7 @@ package com.trip.Let.sGo.post;
 import com.trip.Let.sGo.exception.BadRequestException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
+import com.trip.Let.sGo.post.entity.PostEntity;
 import com.trip.Let.sGo.post.pagination.PaginationResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -86,5 +87,12 @@ public class PostController {
     @PostMapping("/like/{id}")
     public ResponseEntity likePost(@PathVariable("id") Integer postId, Principal principal) {
         return this.postService.likePost(postId, principal.getName());
+    }
+
+    // 내가 좋아요한 게시글 불러오기
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/iLike")
+    public List<PostDTO> getILike(Principal principal){
+        return this.postService.getILikePosts(principal.getName());
     }
 }

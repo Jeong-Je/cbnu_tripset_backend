@@ -20,8 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    //@Value("${aws_server_ip}")
+    @Value("${aws_server_ip}")
     private String base_url;
 
     public PostDTO createPost(CreatePostDTO createPostDTO, String username) {
@@ -63,6 +65,7 @@ public class PostService {
 
         existingPost.setTitle(createPostDTO.getTitle());
         existingPost.setContent(createPostDTO.getContent());
+        existingPost.setCategory(createPostDTO.getCategory());
         postRepository.save(existingPost);
 
         return new PostDTO(existingPost);
@@ -110,14 +113,7 @@ public class PostService {
 
         Page<PostEntity> postPage;
 
-        if (like) {
-            UserEntity user = this.userRepository.findByUsername(username);
-            if (user == null) { // username이 존재하지 않는경우
-                throw new DataNotFoundException("User not found with username: " + username);
-            }
-            Integer voterId = user.getId(); // 좋아요 누른 사용자 id
-            postPage = this.postRepository.findAllByVoterId(voterId, pageable); //좋아요 누른 게시글 가져오기
-        } else if (category.equals("FREE")) {
+        if (category.equals("FREE")) {
             postPage = this.postRepository.findByCategory("FREE", pageable);
         } else if (category.equals("PLAN")) {
             postPage = this.postRepository.findByCategory("PLAN", pageable);
@@ -135,6 +131,13 @@ public class PostService {
                 pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category, like);
 
         return new PaginationResult(postPage.map(PaginationPostDTO::new).getContent(), nextPageLink);
+    }
+
+    public List<PostDTO> getILikePosts(String username) {
+        UserEntity user = this.userRepository.findByUsername(username);
+        Integer voterId = user.getId(); // 좋아요 누른 사용자 id
+        List<PostDTO> iLikePosts = this.postRepository.findAllByVoterId(voterId).stream().map((post) -> new PostDTO(post)).collect(Collectors.toList());
+        return iLikePosts;
     }
 
     //게시글 조회 오류
