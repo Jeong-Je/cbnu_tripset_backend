@@ -1,5 +1,6 @@
 package com.trip.Let.sGo.chat.dto;
 
+import com.trip.Let.sGo.chat.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDTO {
-    public enum MessageType {
-        ENTER, TALK
-    }
-
     private MessageType type;
 
     private String roomId;
