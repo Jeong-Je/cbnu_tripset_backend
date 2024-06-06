@@ -4,3 +4,5 @@
 
 <h1 align="center">충북대학교 오픈소스 전문프로젝트</h1>
 
+<h4 align="center">프론트(플러터) 소스코드 → https://github.com/jinhyeok409/CBNU_tripset</h4>
+
