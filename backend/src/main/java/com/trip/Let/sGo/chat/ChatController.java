@@ -1,5 +1,6 @@
 package com.trip.Let.sGo.chat;
 
+import com.trip.Let.sGo.chat.dto.ChatMessageDTO;
 import com.trip.Let.sGo.chat.dto.ChatRoomDTO;
 import com.trip.Let.sGo.chat.entity.ChatRoomEntity;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class ChatController {
     // 채팅방 하나 불러오기
     @GetMapping("/room/{roomId}")
     public ChatRoomDTO getRoomById(@PathVariable("roomId") String roomId) {
-        return chatService.findRoomById(roomId);
+        return this.chatService.findRoomById(roomId);
+    }
+
+    // 채팅 내역 불러오기
+    @GetMapping("/history")
+    public List<ChatMessageDTO> getChatHistory(@RequestParam("roomId") String roomId) {
+        return this.chatService.getChatHistory(roomId);
     }
 }

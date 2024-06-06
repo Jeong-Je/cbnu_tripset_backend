@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 public class MessageController {
@@ -15,6 +17,7 @@ public class MessageController {
 
     @MessageMapping("/chat/message")
     public void enter(ChatMessageDTO chatMessageDTO) {
+        chatMessageDTO.setTimestamp(LocalDateTime.now());
         if (MessageType.ENTER.equals(chatMessageDTO.getType())) {
             chatMessageDTO.setMessage(chatMessageDTO.getSender() + "님이 들어왔습니다.");
         }

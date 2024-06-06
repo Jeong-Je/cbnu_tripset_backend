@@ -75,4 +75,22 @@ public class ChatService {
 
         chatMessageRepository.save(chatMessageEntity);
     }
+
+    // 채팅 내역 불러오기
+    public List<ChatMessageDTO> getChatHistory(String roomId) {
+        List<ChatMessageEntity> chatHistory = this.chatMessageRepository.findByRoomId(roomId);
+        UserEntity userEntity;
+        String sender;
+        return chatHistory.stream()
+                .map(chats -> {
+                    ChatMessageDTO dto = new ChatMessageDTO();
+                    dto.setMessage(chats.getMessage());
+                    dto.setSender(chats.getSender().getUsername());
+                    dto.setType(chats.getType());
+                    dto.setRoomId(chats.getRoomId());
+                    dto.setTimestamp(chats.getTimestamp());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }
