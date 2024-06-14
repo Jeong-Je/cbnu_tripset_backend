@@ -23,9 +23,9 @@ class ApplicationTests {
 //		for(int i=1;i<=100;i++){
 //			PostEntity post = new PostEntity();
 //			post.setAuthor(user);
-//			post.setContent(String.format("[%03d] > 계획 게시판 임시 게시글 내용", i));
-//			post.setTitle(String.format("[%03d] > 계획 게시판 임시 게시글 제목", i));
-//			post.setCategory("PLAN");
+//			post.setContent(String.format("[%03d] > 자유 게시판 임시 게시글 내용", i));
+//			post.setTitle(String.format("[%03d] > 자유 게시판 임시 게시글 제목", i));
+//			post.setCategory("FREE");
 //
 //			postRepository.save(post);
 //		}

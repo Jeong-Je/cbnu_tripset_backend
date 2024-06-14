@@ -1,6 +1,8 @@
 package com.trip.Let.sGo.chat;
 
+import com.trip.Let.sGo.chat.dto.ChatMessageDTO;
 import com.trip.Let.sGo.chat.dto.ChatRoomDTO;
+import com.trip.Let.sGo.chat.entity.ChatRoomEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
@@ -17,8 +19,8 @@ public class ChatController {
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
     @ResponseBody
-    public List<ChatRoomDTO> room() {
-        return this.chatService.findAllRoom();
+    public List<ChatRoomDTO> getAllRooms() {
+        return this.chatService.findAllRooms();
     }
 
     // 새로운 채팅방 생성
@@ -28,10 +30,15 @@ public class ChatController {
         return this.chatService.createRoom(name);
     }
 
-    // 특정 채팅방 조회
+    // 채팅방 하나 불러오기
     @GetMapping("/room/{roomId}")
-    @ResponseBody
-    public ChatRoomDTO roomInfo(@PathVariable String roomId) {
-        return this.chatService.findById(roomId);
+    public ChatRoomDTO getRoomById(@PathVariable("roomId") String roomId) {
+        return this.chatService.findRoomById(roomId);
+    }
+
+    // 채팅 내역 불러오기
+    @GetMapping("/history")
+    public List<ChatMessageDTO> getChatHistory(@RequestParam("roomId") String roomId) {
+        return this.chatService.getChatHistory(roomId);
     }
 }

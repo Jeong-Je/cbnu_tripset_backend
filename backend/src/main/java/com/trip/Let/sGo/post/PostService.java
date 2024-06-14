@@ -3,6 +3,7 @@ package com.trip.Let.sGo.post;
 import com.trip.Let.sGo.exception.DataNotFoundException;
 import com.trip.Let.sGo.exception.ForbiddenAccessException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
+import com.trip.Let.sGo.post.dto.PaginationPostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
 import com.trip.Let.sGo.post.entity.PostEntity;
 import com.trip.Let.sGo.post.pagination.PaginationResult;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -62,6 +65,7 @@ public class PostService {
 
         existingPost.setTitle(createPostDTO.getTitle());
         existingPost.setContent(createPostDTO.getContent());
+        existingPost.setCategory(createPostDTO.getCategory());
         postRepository.save(existingPost);
 
         return new PostDTO(existingPost);
@@ -87,10 +91,10 @@ public class PostService {
         PostDTO postDTO = new PostDTO(post);
 
         return postDTO;
-
     }
 
-    public PaginationResult paginatePost(Integer page, Integer size, String direction, String username, String category) {
+    public PaginationResult paginatePost(Integer page, Integer size, String direction,
+                                         String username, String category, Boolean like) {
         Pageable pageable = direction.equals("ASC")
                 ? PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createDate"))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
@@ -108,7 +112,8 @@ public class PostService {
 //        }
 
         Page<PostEntity> postPage;
-        if(category.equals("FREE")) {
+
+        if (category.equals("FREE")) {
             postPage = this.postRepository.findByCategory("FREE", pageable);
         } else if (category.equals("PLAN")) {
             postPage = this.postRepository.findByCategory("PLAN", pageable);
@@ -117,14 +122,22 @@ public class PostService {
         }
 
         //게시글이 없을때
-        if(postPage == null){
+        if (postPage == null || postPage.isEmpty()) {
             throw new DataNotFoundException("게시글을 조회하지 못했습니다");
         }
 
         // 다음 페이지 정보 (무한 스크롤에서 사용할 계획)
-        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s&category=%s", base_url, pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category);
+        String nextPageLink = String.format("http://%s/post?page=%d&size=%d&direction=%s&category=%s", base_url,
+                pageable.next().getPageNumber(), pageable.next().getPageSize(), direction, category, like);
 
-        return new PaginationResult(postPage.map(PostDTO::new).getContent(), nextPageLink);
+        return new PaginationResult(postPage.map(PaginationPostDTO::new).getContent(), nextPageLink);
+    }
+
+    public List<PostDTO> getILikePosts(String username) {
+        UserEntity user = this.userRepository.findByUsername(username);
+        Integer voterId = user.getId(); // 좋아요 누른 사용자 id
+        List<PostDTO> iLikePosts = this.postRepository.findAllByVoterId(voterId).stream().map((post) -> new PostDTO(post)).collect(Collectors.toList());
+        return iLikePosts;
     }
 
     //게시글 조회 오류
@@ -146,7 +159,7 @@ public class PostService {
         if (!post.getVoter().contains(user)) {
             // 좋아요 명단에 넣기
             post.getVoter().add(user);
-
+//            user.setLikedPosts((Set<PostEntity>) post); //userEntity에도 추가
             // 좋아요 개수 1 증가
             post.setLikeCount(post.getLikeCount() + 1);
 

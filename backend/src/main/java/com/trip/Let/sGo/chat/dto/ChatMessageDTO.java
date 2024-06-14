@@ -1,19 +1,18 @@
 package com.trip.Let.sGo.chat.dto;
 
+import com.trip.Let.sGo.chat.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDTO {
-    public enum MessageType {
-        ENTER, TALK
-    }
-
     private MessageType type;
 
     private String roomId;
@@ -21,4 +20,6 @@ public class ChatMessageDTO {
     private String sender;
 
     private String message;
+
+    private LocalDateTime timestamp;
 }

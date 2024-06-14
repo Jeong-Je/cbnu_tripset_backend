@@ -4,6 +4,7 @@ package com.trip.Let.sGo.post;
 import com.trip.Let.sGo.exception.BadRequestException;
 import com.trip.Let.sGo.post.dto.CreatePostDTO;
 import com.trip.Let.sGo.post.dto.PostDTO;
+import com.trip.Let.sGo.post.entity.PostEntity;
 import com.trip.Let.sGo.post.pagination.PaginationResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,13 +65,15 @@ public class PostController {
     }
 
     // 게시글 페이지네이션
+    @PreAuthorize("isAuthenticated()")
     @GetMapping()
     public PaginationResult paginatePost(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                          @RequestParam(value = "size", defaultValue = "10") Integer size,
                                          @RequestParam(value = "direction", defaultValue = "DESC") String direction,
                                          @RequestParam(value = "username", defaultValue = "all") String username,
-                                         @RequestParam(value = "category", defaultValue = "all") String category) {
-        return this.postService.paginatePost(page, size, direction, username, category);
+                                         @RequestParam(value = "category", defaultValue = "all") String category,
+                                         @RequestParam(value = "like", defaultValue = "false") Boolean like) {
+        return this.postService.paginatePost(page, size, direction, username, category, like);
     }
 
     // 특정 게시글 불러오기
@@ -84,5 +87,12 @@ public class PostController {
     @PostMapping("/like/{id}")
     public ResponseEntity likePost(@PathVariable("id") Integer postId, Principal principal) {
         return this.postService.likePost(postId, principal.getName());
+    }
+
+    // 내가 좋아요한 게시글 불러오기
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/iLike")
+    public List<PostDTO> getILike(Principal principal){
+        return this.postService.getILikePosts(principal.getName());
     }
 }
